@@ -1,0 +1,25 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>專案任務追蹤</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header class="topbar">
+    <div class="topbar__title">專案任務追蹤</div>
+    <div class="topbar__user" id="user"></div>
+  </header>
+  <nav class="tabs" id="tabs" hidden></nav>
+  <main class="view" id="view">
+    <div class="state">載入中…</div>
+  </main>
+  <dialog class="sheet" id="editor"></dialog>
+  <div class="toast" id="toast" hidden></div>
+
+  <script src="https://static.line-scdn.net/liff/edge/2/sdk.js"></script>
+  <script src="config.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>

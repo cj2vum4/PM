@@ -1,0 +1,3 @@
+# GAS 程式碼與備份只留在本機，前端部署只需要 frontend/
+gas/
+.claude/
