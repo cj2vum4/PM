@@ -3,13 +3,18 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-  <title>專案任務追蹤</title>
+  <title>我的任務｜專案任務追蹤</title>
+  <link rel="preconnect" href="https://script.google.com" crossorigin>
+  <link rel="preconnect" href="https://script.googleusercontent.com" crossorigin>
   <link rel="stylesheet" href="style.css">
 </head>
-<body>
+<body data-page="mine">
   <header class="topbar">
-    <div class="topbar__title">專案任務追蹤</div>
-    <div class="topbar__user" id="user"></div>
+    <div class="topbar__title">我的任務</div>
+    <div class="topbar__right">
+      <span class="sync" id="sync" hidden>更新中…</span>
+      <span class="topbar__user" id="user"></span>
+    </div>
   </header>
   <nav class="tabs" id="tabs" hidden></nav>
   <main class="view" id="view">
@@ -18,8 +23,8 @@
   <dialog class="sheet" id="editor"></dialog>
   <div class="toast" id="toast" hidden></div>
 
-  <script src="https://static.line-scdn.net/liff/edge/2/sdk.js"></script>
   <script src="config.js"></script>
-  <script src="app.js"></script>
+  <script src="common.js"></script>
+  <script src="mine.js"></script>
 </body>
 </html>

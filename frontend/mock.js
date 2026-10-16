@@ -1,6 +1,7 @@
 // 本機預覽用的假資料：網址加 ?mock（主管視角）或 ?mock=member（成員視角）
 (function () {
   const asManager = new URLSearchParams(location.search).get('mock') !== 'member';
+  window.MOCK_USER = { name: asManager ? '興煜' : '宜恩', isManager: asManager };
 
   function iso(offsetDays) {
     const d = new Date();
@@ -34,11 +35,27 @@
   window.MOCK_API = async function (action, payload) {
     await new Promise(r => setTimeout(r, 250));
     if (action === 'me') {
-      return JSON.parse(JSON.stringify(me));
+      return JSON.parse(JSON.stringify({ statuses: me.statuses, tasks: me.tasks }));
+    }
+    if (action === 'addOptions') {
+      const members = [{ name: me.name, projects: me.projects }];
+      if (asManager) {
+        members.push({ name: '家朗', projects: ['課程規劃', '解題小組', 'PRD線上部屬'] }, { name: '宜恩', projects: ['課程規劃', '解題小組'] });
+      }
+      return { self: me.name, categories: me.categories, members: members };
     }
     if (action === 'addTask') {
-      me.tasks.push({ row: nextRow++, project: payload.project, name: payload.name, category: payload.category, start: payload.start, due: payload.due, time: payload.time, status: '未開始', progress: '0%', note: payload.note, daysLeft: null, postponeCount: 0 });
-      return { row: nextRow - 1 };
+      if (payload.member && payload.member !== me.name && !asManager) {
+        throw Object.assign(new Error('只有主管可以查看'), { code: 403 });
+      }
+      const project = payload.newProject || payload.project;
+      if (payload.newProject && !me.projects.includes(project) && (!payload.member || payload.member === me.name)) {
+        me.projects.push(project);
+      }
+      if (!payload.member || payload.member === me.name) {
+        me.tasks.push({ row: nextRow++, project: project, name: payload.name, category: payload.category, start: payload.start, due: payload.due, time: payload.time, status: '未開始', progress: '0%', note: payload.note, daysLeft: null, postponeCount: 0 });
+      }
+      return { row: nextRow - 1, member: payload.member || me.name, project: project };
     }
     if (action === 'updateTask') {
       const task = me.tasks.find(t => t.row === payload.row);
@@ -48,6 +65,11 @@
       }
       ['status', 'due', 'time', 'note'].forEach(k => { if (payload[k] !== undefined) task[k] = payload[k]; });
       return { changed: 1 };
+    }
+    if (action === 'overview' || action === 'changes') {
+      if (!asManager) {
+        throw Object.assign(new Error('只有主管可以查看'), { code: 403 });
+      }
     }
     if (action === 'overview') {
       const open = me.tasks.filter(t => t.status !== '已完成');

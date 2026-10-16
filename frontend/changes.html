@@ -1,0 +1,29 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>異動紀錄｜專案任務追蹤</title>
+  <link rel="preconnect" href="https://script.google.com" crossorigin>
+  <link rel="preconnect" href="https://script.googleusercontent.com" crossorigin>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body data-page="changes">
+  <header class="topbar">
+    <div class="topbar__title">異動紀錄</div>
+    <div class="topbar__right">
+      <span class="sync" id="sync" hidden>更新中…</span>
+      <span class="topbar__user" id="user"></span>
+    </div>
+  </header>
+  <nav class="tabs" id="tabs" hidden></nav>
+  <main class="view" id="view">
+    <div class="state">載入中…</div>
+  </main>
+  <div class="toast" id="toast" hidden></div>
+
+  <script src="config.js"></script>
+  <script src="common.js"></script>
+  <script src="changes.js"></script>
+</body>
+</html>
