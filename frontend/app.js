@@ -139,8 +139,36 @@
   async function loadMe() {
     state.me = await api('me');
     $user.textContent = state.me.isManager ? `${state.me.name}（主管）` : state.me.name;
+    applyRequestedTab();
     renderTabs();
     render();
+  }
+
+  // Rich Menu 的按鈕用 ?tab=mine／add／overview／changes 直接開到指定分頁（只在第一次載入時套用）
+  let requestedTabApplied = false;
+  function readRequestedTab() {
+    const params = new URLSearchParams(location.search);
+    const liffState = params.get('liff.state');
+    if (params.get('tab')) {
+      return params.get('tab');
+    }
+    // liff.init 尚未把 liff.state 轉成一般網址時，自己解析一次
+    return liffState ? new URLSearchParams(liffState.split('?')[1] || '').get('tab') : null;
+  }
+  function applyRequestedTab() {
+    if (requestedTabApplied) {
+      return;
+    }
+    requestedTabApplied = true;
+    const requestedTab = readRequestedTab();
+    if (!requestedTab) {
+      return;
+    }
+    if (tabsFor(state.me).some(([id]) => id === requestedTab)) {
+      state.tab = requestedTab;
+    } else if (requestedTab === 'overview' || requestedTab === 'changes') {
+      toast('只有主管可以查看全員總覽，已切換到我的任務');
+    }
   }
 
   function tabsFor(me) {
