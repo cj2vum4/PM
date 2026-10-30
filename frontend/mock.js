@@ -48,14 +48,25 @@
       if (payload.member && payload.member !== me.name && !asManager) {
         throw Object.assign(new Error('只有主管可以查看'), { code: 403 });
       }
-      const project = payload.newProject || payload.project;
-      if (payload.newProject && !me.projects.includes(project) && (!payload.member || payload.member === me.name)) {
+      const project = (payload.project || payload.newProject || '').trim();
+      const self = !payload.member || payload.member === me.name;
+      if (!project) {
+        throw Object.assign(new Error('請選擇或輸入專案'), { code: 400 });
+      }
+      const exists = me.projects.includes(project);
+      if (exists && !payload.name) {
+        throw Object.assign(new Error(`「${project}」已經存在，請填寫任務名稱`), { code: 400 });
+      }
+      if (!exists && self) {
         me.projects.push(project);
       }
-      if (!payload.member || payload.member === me.name) {
+      if (!payload.name) {
+        return { row: null, member: payload.member || me.name, project: project, projectCreated: true };
+      }
+      if (self) {
         me.tasks.push({ row: nextRow++, project: project, name: payload.name, category: payload.category, start: payload.start, due: payload.due, time: payload.time, status: '未開始', progress: '0%', note: payload.note, daysLeft: null, postponeCount: 0 });
       }
-      return { row: nextRow - 1, member: payload.member || me.name, project: project };
+      return { row: nextRow - 1, member: payload.member || me.name, project: project, projectCreated: !exists };
     }
     if (action === 'updateTask') {
       const task = me.tasks.find(t => t.row === payload.row);

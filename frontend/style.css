@@ -437,3 +437,62 @@ a.chip {
   color: var(--surface);
   font-size: 14px;
 }
+
+/* 專案欄：可輸入也可下拉 */
+.combo {
+  position: relative;
+}
+
+.combo input {
+  padding-right: 44px;
+}
+
+.combo__toggle {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 44px;
+  height: 100%;
+  border: 0;
+  background: none;
+  color: var(--muted);
+  font-size: 16px;
+  cursor: pointer;
+}
+
+.combo__list {
+  position: absolute;
+  z-index: 5;
+  top: calc(100% + 4px);
+  left: 0;
+  right: 0;
+  max-height: 240px;
+  margin: 0;
+  padding: 4px 0;
+  overflow-y: auto;
+  list-style: none;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: var(--surface);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+}
+
+.combo__item,
+.combo__empty {
+  padding: 10px 12px;
+}
+
+.combo__item {
+  cursor: pointer;
+}
+
+.combo__item:hover,
+.combo__item.is-active,
+.combo__item[aria-selected="true"] {
+  background: var(--chip);
+}
+
+.combo__empty {
+  color: var(--muted);
+  font-size: 13px;
+}
